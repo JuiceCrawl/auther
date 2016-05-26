@@ -2,6 +2,7 @@
 
 var app = require('express')();
 var path = require('path');
+var passport = require('passport');
 var session = require('express-session');
 var User = require('../api/users/user.model');
 
@@ -12,7 +13,7 @@ app.use(session({
 
 // place right after the session setup middleware
 app.use(function (req, res, next) {
-  // console.log('session', req.session);
+  console.log('SESSION', req.session);
   next();
 });
 
@@ -21,6 +22,10 @@ app.use('/api', function (req, res, next) {
   // console.log('counter', ++req.session.counter);
   next();
 });
+
+//passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(require('./logging.middleware'));
 
@@ -65,6 +70,22 @@ app.post('/signup', function (req, res, next) {
       res.json(user.dataValues);  
   })
   .catch(next);
+});
+
+app.get('/logout',function(req,res,next){
+  req.session.userId = null;
+  res.sendStatus(204);
+});
+
+app.get('/auth/me', function(req, res, next){  
+  var userId = req.session.userId;
+  User.findOne({
+    where: {
+      id : userId
+    }
+  }).then(function(response){
+    res.json(response.dataValues);
+  }).catch(next)
 });
 
 app.use(require('./error.middleware'));

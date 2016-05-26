@@ -2,7 +2,7 @@
   <ul class="list-inline large-font">
     <li>
       <span
-        contenteditable
+        contenteditable="{{isAdmin}}"
         class="large-font"
         ng-model="story.title"
         ng-model-options="{debounce: 500}">
@@ -11,6 +11,7 @@
     <li><span class="muted">by</span></li>
     <li>
       <select
+        contenteditable="{{isAdmin}}"
         ng-options="user.id as user.name for user in users"
         ng-model="story.author_id"
         ng-model-options="{debounce: 500}">
@@ -19,7 +20,7 @@
   </ul>
   <br>
   <p
-    contenteditable
+    contenteditable="{{isAuthor}}"
     ng-model="story.paragraphs"
     ng-model-options="{debounce: 500}"
     ng-list="<br><br>"
